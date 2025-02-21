@@ -3,7 +3,7 @@ const express = require("express");
 const cors = require("cors");
 const app = express();
 const port = process.env.PORT || 4000;
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 
 app.use(express.json());
 app.use(cors());
@@ -47,6 +47,13 @@ async function run() {
       const {email, category} = req.params;
       const query = {email: email, category:category}
       const result = await taskCollection.find(query).toArray();
+      res.send(result);
+    })
+    
+    app.delete("/task/:id", async (req, res)=>{
+      const id = req.params.id;
+      const query = {_id: new ObjectId(id)}
+      const result = await taskCollection.deleteOne(query);
       res.send(result);
     })
 
