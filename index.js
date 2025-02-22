@@ -50,6 +50,13 @@ async function run() {
       res.send(result);
     })
 
+    app.get("/tasks/:email", async (req, res)=>{
+      const {email} = req.params;
+      const query = {email: email}
+      const result = await taskCollection.find(query).toArray();
+      res.send(result);
+    })
+
     app.get("/task/:id", async (req, res)=>{
       const id = req.params.id;
       const query = {_id: new ObjectId(id)}
@@ -78,6 +85,18 @@ async function run() {
       const result = await taskCollection.deleteOne(query);
       res.send(result);
     })
+
+    app.put("/task/:id", async (req, res) => {
+      const { id } = req.params;
+      const { category } = req.body;
+    
+      const result = await taskCollection.updateOne(
+        { _id: new ObjectId(id) },
+        { $set: { category } }
+      );
+    
+      res.send(result);
+    });
 
      // Connect the client to the server	(optional starting in v4.7)
     // await client.connect();
